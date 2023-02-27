@@ -13,7 +13,7 @@ Library           RPA.PDF
 Library           RPA.Archive
 Library           Dialogs
 Library           RPA.Robocloud.Secrets
-Resource          tasks.robot
+Resource          resizePdfFiles.py
 
 *** Tasks ***
 Minimal task
