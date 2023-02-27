@@ -1,28 +1,37 @@
 import os
 import PyPDF2
 
-# Chemin vers le dossier contenant les fichiers PDF
-pdf_dir = 'C:\Ohlone\RoboCorp-main\Task_Files\Embeded_PDFs'
+# Define a function to resize a single PDF file
+def resize_pdf_file(input_path, output_path):
+    # Open the PDF file in read binary mode
+    with open(input_path, 'rb') as input_file:
+        # Create a PyPDF2 PdfFileReader object from the input file
+        pdf_reader = PyPDF2.PdfFileReader(input_file)
+        # Create a PyPDF2 PdfFileWriter object to write the output file
+        pdf_writer = PyPDF2.PdfFileWriter()
+        # Loop through all the pages in the input file
+        for page_number in range(pdf_reader.getNumPages()):
+            # Get the current page from the input file
+            page = pdf_reader.getPage(page_number)
+            # Scale the page by a factor of 1.5 (both horizontally and vertically)
+            page.scale(1.5, 1.5)
+            # Add the scaled page to the output file
+            pdf_writer.addPage(page)
+        # Open the output file in write binary mode
+        with open(output_path, 'wb') as output_file:
+            # Write the contents of the output PDF writer to the output file
+            pdf_writer.write(output_file)
 
-# Parcourir tous les fichiers PDF du dossier
-for filename in os.listdir(pdf_dir):
+# Define the input and output directories
+input_directory = ''
+output_directory = ''
+
+# Loop through all the PDF files in the input directory
+for filename in os.listdir(input_directory):
     if filename.endswith('.pdf'):
-        # Ouvrir le fichier PDF
-        with open(os.path.join(pdf_dir, filename), 'rb') as pdf_file:
-            pdf_reader = PyPDF2.PdfFileReader(pdf_file)
-
-            # Extraire chaque page du PDF
-            for page_num in range(pdf_reader.numPages):
-                page = pdf_reader.getPage(page_num)
-
-                # Réduire la taille de la page pour qu'elle s'affiche sur une seule page
-                page.scale(1.5, 1.5)
-
-                # Créer un objet PdfFileWriter pour stocker les pages modifiées
-                pdf_writer = PyPDF2.PdfFileWriter()
-                pdf_writer.addPage(page)
-
-                # Écrire les pages modifiées dans un nouveau fichier PDF
-                output_filename = os.path.splitext(filename)[0] + '_modifie.pdf'
-                with open(os.path.join(pdf_dir, output_filename), 'wb') as output_file:
-                    pdf_writer.write(output_file)
+        # Get the full path to the input file
+        input_path = os.path.join(input_directory, filename)
+        # Get the full path to the output file
+        output_path = os.path.join(output_directory, filename)
+        # Resize the PDF file
+        resize_pdf_file(input_path, output_path)
